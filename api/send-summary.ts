@@ -3,8 +3,6 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { SESv2Client, SendEmailCommand } from "@aws-sdk/client-sesv2";
 import { cert, getApps, initializeApp } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import fs from "fs";
-import path from "path";
 
 function getFirebaseApp() {
   if (getApps().length > 0) return getApps()[0];
