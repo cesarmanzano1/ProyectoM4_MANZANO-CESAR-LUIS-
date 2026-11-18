@@ -3,7 +3,7 @@ import { useState, type JSX } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTasks } from "../hooks/useTasks";
-import { addTask, toggleTaskStatus, moveToTrash, restoreTask, permanentDeleteTask,cycleTaskState } from "../services/taskService";
+import { addTask,moveToTrash, restoreTask, permanentDeleteTask,cycleTaskState } from "../services/taskService";
 import { EmailSummaryButton } from "../components/EmailSummaryButton";
 import { TaskFormModal } from "../components/TaskFormModal";
 import { CalendarView } from "../components/CalendarView";
