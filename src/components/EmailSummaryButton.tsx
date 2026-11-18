@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { auth } from "../services/firebase";
 
-// Actualizamos el tipo para que acepte opcionalmente la carpeta/estado
 type Task = { title: string; completed: boolean; folder?: string };
 type Props = { todos: Task[] };
 
