@@ -106,38 +106,38 @@ export function DashboardPage(): JSX.Element {
             <p style={{ fontSize: "0.75rem", textTransform: "uppercase", color: "#bfdbfe", fontWeight: 700, marginBottom: "0.75rem", letterSpacing: "0.5px" }}>Carpetas de Tareas</p>
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.35rem" }}>
               {[
-                { name: "Dashboard", path: "/", icon: dashboarImg },
-                { name: "Pendientes", path: "/folder/pendientes", icon: relojParedImg },
-                { name: "En Proceso", path: "/folder/en-proceso", icon: repeticionImg },
-                { name: "Completadas", path: "/folder/completadas", icon: verificacionImg },
-                { name: "Urgentes", path: "/folder/urgentes", icon: sirenaImg },
-                { name: "Calendario", path: "/calendar", icon: calendarioImg },
-                { name: "Papelera", path: "/trash", icon: papeleraImg }
-              ].map(folder => {
-                const isActive = window.location.pathname === folder.path;
-                return (
-                  <li
-                    key={folder.name}
-                    onClick={() => navigate(folder.path)}
-                    style={{
-                      padding: "0.7rem 0.9rem",
-                      borderRadius: "10px",
-                      cursor: "pointer",
-                      backgroundColor: isActive ? "rgba(255, 255, 255, 0.25)" : "transparent",
-                      color: "#fff",
-                      fontWeight: isActive ? 600 : 400,
-                      fontSize: "0.9rem",
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      transition: "background 0.2s"
-                    }}
-                  >
-                    <img src={folder.icon} alt={folder.name} style={{ width: "22px", height: "22px", objectFit: "contain" }} />
-                    {folder.name}
-                  </li>
-                );
-              })}
+  { name: "Principal", path: "/tasks", icon: dashboarImg },
+  { name: "Pendientes", path: "/tasks/pendientes", icon: relojParedImg },
+  { name: "En Proceso", path: "/tasks/en-proceso", icon: repeticionImg },
+  { name: "Completadas", path: "/tasks/completadas", icon: verificacionImg },
+  { name: "Urgentes", path: "/tasks/urgentes", icon: sirenaImg },
+  { name: "Calendario", path: "/calendar", icon: calendarioImg },
+  { name: "Papelera", path: "/papelera", icon: papeleraImg }
+].map(folder => {
+  const isActive = window.location.pathname === folder.path;
+  return (
+    <li
+      key={folder.name}
+      onClick={() => navigate(folder.path)}
+      style={{
+        padding: "0.7rem 0.9rem",
+        borderRadius: "10px",
+        cursor: "pointer",
+        backgroundColor: isActive ? "rgba(255, 255, 255, 0.25)" : "transparent",
+        color: "#fff",
+        fontWeight: isActive ? 600 : 400,
+        fontSize: "0.9rem",
+        display: "flex",
+        alignItems: "center",
+        gap: "0.75rem",
+        transition: "background 0.2s"
+      }}
+    >
+      <img src={folder.icon} alt={folder.name} style={{ width: "22px", height: "22px", objectFit: "contain" }} />
+      {folder.name}
+    </li>
+  );
+})}
             </ul>
           </div>
         </div>
@@ -280,7 +280,7 @@ export function DashboardPage(): JSX.Element {
             <p style={{ fontSize: "0.825rem", color: "#64748b", marginBottom: "1.25rem", lineHeight: "1.4" }}>
               Recibe un reporte detallado con el estado de todas tus tareas directamente en tu correo electrónico.
             </p>
-            <EmailSummaryButton todos={activeTasks} userEmail={user?.email || ""} />
+            <EmailSummaryButton todos={activeTasks}  />
           </div>
         </aside>
       </main>
