@@ -418,8 +418,7 @@ export function TasksPage({ uid }: Props) {
                 {loading && tasks.length === 0 ? "Guardando..." : "Agregar"}
               </button>
             </form>
-            {user?.email && <EmailSummaryButton todos={tasks} userEmail={user.email} />}
-
+                {user?.email && <EmailSummaryButton todos={tasks} />}
             {error && (
               <p role="alert" className="error-message">
                 {error}

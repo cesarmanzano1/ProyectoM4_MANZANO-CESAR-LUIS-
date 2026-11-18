@@ -260,7 +260,11 @@ body {
 }
 /* Estilos para el botón de enviar resumen / descarga */
 .buttonDownload {
-  display: inline-block;
+  display: block !important;
+  width: 100%;
+  max-width: 250px;
+  margin: 0 auto;
+  box-sizing: border-box;
   position: relative;
   padding: 10px 25px;
   background-color: #4CC713;
@@ -400,4 +404,116 @@ body {
 
 .cssbuttons-io-button:active .icon {
   transform: scale(0.9);
+}
+/* --- Estilos Responsivos para el Dashboard --- */
+/* --- Estilos para la barra lateral deslizante (Responsive Drawer) --- */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f0f4f8;
+  color: #1e293b;
+  font-family: sans-serif;
+  position: relative;
+}
+
+.dashboard-sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #1e3a8a 0%, #1d4ed8 100%);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #fff;
+  box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.dashboard-main {
+  flex: 1;
+  padding: 2.5rem;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* Botón de menú hamburguesa (oculto en pantallas grandes) */
+.mobile-menu-btn {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Adaptación para Tablets y Celulares (<= 1024px) */
+@media (max-width: 1024px) {
+  .dashboard-sidebar {
+    position: fixed;
+    top: 0;
+    left: -280px; /* Oculta fuera de la pantalla a la izquierda */
+    height: 100vh;
+    z-index: 1200;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dashboard-sidebar.open {
+    left: 0; /* Se desliza hacia adentro al abrirse */
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+
+  .dashboard-main {
+    grid-template-columns: 1fr; /* Una sola columna para tareas y estadísticas */
+    padding: 1.5rem 1rem;
+  }
+  .user-profile-container {
+   display: flex;
+  align-items: center;
+  }
+}
+
+/* Fondo oscuro translúcido cuando el menú está abierto en móvil */
+.sidebar-overlay {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .sidebar-overlay.active {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1150;
+  }
+}
+/* --- Ajustes finos para celulares y pantallas ultra estrechas (<= 480px) --- */
+@media (max-width: 480px) {
+  .dashboard-main {
+    padding: 1rem 0.5rem !important; /* Reduce los márgenes exteriores al mínimo */
+    gap: 1rem !important;
+  }
+
+  /* Asegurar que las tarjetas de tareas no se desborden */
+  .dashboard-main div[style*="background-color: rgb(255, 255, 255)"] {
+    padding: 0.85rem !important;
+  }
+
+  /* Ajustar inputs de búsqueda y botones al ancho completo */
+  .dashboard-main input[type="text"] {
+    width: 100% !important;
+  }
 }
