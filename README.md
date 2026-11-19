@@ -31,7 +31,7 @@ Aplicación de gestión de tareas con autenticación segura, persistencia en la 
 - **Frontend:** React 19, TypeScript, Vite, React Router DOM.
 - **Backend & Base de Datos:** Firebase Auth, Firebase Firestore, Firebase Admin.
 - **Servicios Cloud / Email:** AWS SDK v3 (`@aws-sdk/client-sesv2`), Serverless API (Vercel Functions).
-- **Testing y Calidad:** Vitest, Testing Library, JSDOM.
+- **Testing y Calidad:** Vitest, Testing Library,JSDOM.
 - **Despliegue:** Desplegado en **Vercel**.
 
 ## Uso de Inteligencia Artificial (IA)
