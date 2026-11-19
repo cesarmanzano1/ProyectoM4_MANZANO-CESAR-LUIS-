@@ -92,24 +92,21 @@ Crea un archivo `.env` en la raíz del proyecto basándote en la siguiente estru
 ## 🧪 Instalación y Uso Local
 
 ```bash
-git clone <https://github.com/cesarmanzano1/ProyectoM4_MANZANO-CESAR-LUIS-.git >
+git clone https://github.com/cesarmanzano1/ProyectoM4_MANZANO-CESAR-LUIS-.git
 ```
 ```bash
-cd proyectom4-manzano-cesar-luis
+cd PROYECTOM4_MANZANO-CESAR-LUIS
 ```
 ```bash
 npm install
 ```
-# Configura tus variables en el archivo .env
-```bash
-npm run dev
-```
+# antes de continuar no te olvides de configura tus variables en el archivo .env
 
 ## 📜 Scripts Disponibles
 
 *  — Levanta el servidor de desarrollo local con Vite.
 ```bash
-`npm run dev`
+vercel dev
 ```
 *  — Genera el build de producción optimizado.
 ```bash
