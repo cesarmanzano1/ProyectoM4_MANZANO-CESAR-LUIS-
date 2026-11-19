@@ -2,7 +2,7 @@
 
 Aplicación de gestión de tareas con autenticación segura, persistencia en la nube, verificación de identidad por correo y envío de resúmenes automáticos mediante AWS SES.
 
-- **Demo en producción:** [Ver aplicación en Vercel](https://proyectom-4-manzano-cesar-luis-ao8r4leuu-cesar-4a0d.vercel.app/)
+- **Demo en producción:** [Ver aplicación en Vercel](https://proyectom-4-manzano-cesar-luis-fr72m1knc-cesar-4a0d.vercel.app/)
 
 ## Capturas de Pantalla
 
@@ -88,7 +88,7 @@ Crea un archivo `.env` en la raíz del proyecto basándote en la siguiente estru
 | `VITE_FIREBASE_APP_ID` | App ID de Firebase |
 | `FIREBASE_PRIVATE_KEY` | Llave privada de Firebase Admin (para serverless) |
 | `FIREBASE_CLIENT_EMAIL` | Email de cliente de Firebase Admin |
-| `AWS_REGION` | Región de AWS (ej. `us-east-2`) |
+| `AWS_REGION` | Región de AWS |
 | `AWS_ACCESS_KEY_ID` | Credencial de acceso de AWS |
 | `AWS_SECRET_ACCESS_KEY` | Llave secreta de AWS |
 | `SES_FROM` | Dirección de correo verificada remitente en AWS SES |
