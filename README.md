@@ -2,7 +2,7 @@
 
 Aplicación de gestión de tareas con autenticación segura, persistencia en la nube, verificación de identidad por correo y envío de resúmenes automáticos mediante AWS SES.
 
-- **Demo en producción:** [Ver aplicación en Vercel](https://proyectom-4-manzano-cesar-luis-fr72m1knc-cesar-4a0d.vercel.app/)
+- **Demo en producción:** [Ver aplicación en Vercel](https://proyectom-4-manzano-cesar-luis.vercel.app/)
 
 ## Capturas de Pantalla
 
