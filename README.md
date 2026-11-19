@@ -4,10 +4,6 @@ Aplicación de gestión de tareas con autenticación segura, persistencia en la 
 
 - **Demo en producción:** [Ver aplicación en Vercel](https://proyectom-4-manzano-cesar-luis.vercel.app/)
 
-## Capturas de Pantalla
-
-![Pantalla de inicio de MateCode](src/assets/inicio.png)
-
 ## Cómo recibir los resúmenes de tareas
 
 1. Presioná el botón **ENVIAR RESUMEN** y te llegará un correo de AWS.
