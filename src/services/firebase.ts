@@ -15,7 +15,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
-// Exportamos auth para usarlo en TODOS los flujos de autenticación
 
 export const auth = getAuth(app);//get auth optiene el servicio de autenticación de firebase y lo exporta para que pueda ser utilizado en otros archivos del proyecto.
 export const db = getFirestore(app);//getFirestore obtiene el servicio de base de datos de firebase y lo exporta para que pueda ser utilizado en otros archivos del proyecto.

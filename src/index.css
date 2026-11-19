@@ -17,8 +17,6 @@ body {
   align-items: flex-start;
   padding: 3rem 1rem;
 }
-
-
 /* ==========================================================================
    2. COMPONENTES Y TARJETAS GENERALES
    ================================================================---------- */
@@ -437,6 +435,32 @@ body {
 }
 
 
+/* Botón editar compacto */
+.task-edit-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.2s, transform 0.15s;
+}
+
+.task-edit-btn:hover {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.task-edit-btn img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
 /* ==========================================================================
    6. CLASES AUXILIARES Y DE INTERACCIÓN
    ================================================================---------- */
@@ -582,6 +606,35 @@ body {
   div[style*="display: flex"][style*="gap"] > button {
     flex: 1 !important;
     width: 50% !important;
+  }
+  .task-card-actions {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.5rem !important;
+    padding-top: 0.25rem;
+  }
+
+  .task-priority-select {
+    flex: 1 1 auto;
+    min-width: 0;
+    font-size: 0.75rem !important;
+    padding: 0.35rem 0.5rem !important;
+  }
+
+  .task-card-actions > button.task-edit-btn,
+  .task-card-actions > button.bin-button {
+    flex: 0 0 auto !important;
+    width: 34px !important;
+    height: 34px !important;
+    padding: 0 !important;
+  }
+
+  .task-card-actions > button.bin-button .bin-bottom {
+    width: 11px;
+  }
+
+  .task-card-actions > button.bin-button .bin-top {
+    width: 13px;
   }
 }
 @media (max-width: 768px) {

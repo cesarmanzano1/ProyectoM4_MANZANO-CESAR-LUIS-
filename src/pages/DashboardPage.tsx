@@ -3,7 +3,15 @@ import { useState, type JSX } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTasks } from "../hooks/useTasks";
-import { addTask,moveToTrash, restoreTask, permanentDeleteTask,cycleTaskState } from "../services/taskService";
+import {
+  addTask,
+  updateTask,
+  updateTaskPriority,
+  moveToTrash,
+  restoreTask,
+  permanentDeleteTask,
+  cycleTaskState,
+} from "../services/taskService";
 import { EmailSummaryButton } from "../components/EmailSummaryButton";
 import { TaskFormModal } from "../components/TaskFormModal";
 import { CalendarView } from "../components/CalendarView";
@@ -25,24 +33,14 @@ import coheteImg from "../assets/Cohete brillante despegando hacia las estrellas
 import resumenImg from "../assets/economia.png";
 import pendienteImg from "../assets/reloj.png";
 import ideaImg from "../assets/idea.png";
-
-// export function DashboardView() {
-//   return (
-//     <div className="dashboard-container">
-//       {/* Todo el contenido de tu vista (Sidebar, bienvenida, tareas, etc.) */}
-      
-//       {/* El Footer al final de la vista */}
-//       <Footer />
-//     </div>
-//   );
-// }
+import boligrafoImg from "../assets/boligrafo.png";
 
 export function DashboardPage(): JSX.Element {
   const { user, logout } = useAuth();
   const { folderName } = useParams();
   const navigate = useNavigate();
 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // Estado para abrir/cerrar el menú en móviles
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const isCalendarView = window.location.pathname === "/calendar";
   const isTrashView = window.location.pathname === "/papelera";
@@ -52,10 +50,22 @@ export function DashboardPage(): JSX.Element {
 
   const { tasks, loading, refetch } = useTasks(user?.uid || "");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskToEdit, setTaskToEdit] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const activeTasks = tasks.filter(t => !t.isDeleted);
   const trashTasks = tasks.filter(t => t.isDeleted);
+
+  const handleCreateOrUpdateTask = async (taskData: any, taskId?: string) => {
+    if (!user) return;
+    if (taskId) {
+      await updateTask(taskId, taskData);
+    } else {
+      await addTask({ ...taskData, userId: user.uid });
+    }
+    setTaskToEdit(null);
+    refetch();
+  };
 
   const folderFilteredTasks = currentFolder === "Todas"
     ? activeTasks
@@ -66,23 +76,17 @@ export function DashboardPage(): JSX.Element {
     (t.description && t.description.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
-  const pendientesCount = activeTasks.filter(t => (t.folder || "Pendientes") === "Pendientes" && !t.completed).length;
-  const enProcesoCount = activeTasks.filter(t => (t.folder || "").toLowerCase() === "en proceso").length;
   const completadasCount = activeTasks.filter(t => t.completed || t.folder === "Completadas").length;
-  const urgentesCount = activeTasks.filter(t => t.folder === "Urgentes").length;
+  const enProcesoCount = activeTasks.filter(
+    t => !(t.completed || t.folder === "Completadas") && (t.folder || "").toLowerCase() === "en proceso"
+  ).length;
+  const pendientesCount = Math.max(0, activeTasks.length - completadasCount - enProcesoCount);
   const totalTasks = activeTasks.length;
-
-  const handleCreateNewTask = async (taskData: any) => {
-    if (!user) return;
-    await addTask({ ...taskData, userId: user.uid });
-    refetch();
-  };
-
   return (
     <div className="dashboard-layout">
 
       {/* Capa oscura de fondo cuando el menú móvil está abierto */}
-      <div 
+      <div
         className={`sidebar-overlay ${isSidebarOpen ? "active" : ""}`}
         onClick={() => setIsSidebarOpen(false)}
       />
@@ -94,13 +98,11 @@ export function DashboardPage(): JSX.Element {
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2.5rem" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", cursor: "pointer" }} onClick={() => { navigate("/"); setIsSidebarOpen(false); }}>
               <img src={logoImg} alt="MateCode Logo" style={{ width: "72px", height: "72px", objectFit: "contain" }} />
-             
             </div>
-             <div>
-                <h2 style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0, color: "#fff" }}>MateCode</h2>
-                <span style={{ fontSize: "0.65rem", color: "#bfdbfe" }}>Aplicaciones Web para tu Empresa</span>
-              </div>
-            {/* Botón X para cerrar en móvil */}
+            <div>
+              <h2 style={{ fontSize: "1.1rem", fontWeight: 700, margin: 0, color: "#fff" }}>MateCode</h2>
+              <span style={{ fontSize: "0.65rem", color: "#bfdbfe" }}>Aplicaciones Web para tu Empresa</span>
+            </div>
             <button
               onClick={() => setIsSidebarOpen(false)}
               style={{ display: "none", background: "transparent", border: "none", color: "#fff", fontSize: "1.25rem", cursor: "pointer" }}
@@ -112,7 +114,6 @@ export function DashboardPage(): JSX.Element {
 
           <div style={{ marginBottom: "1.5rem" }}>
             <p style={{ fontSize: "0.75rem", textTransform: "uppercase", color: "#bfdbfe", fontWeight: 700, marginBottom: "0.75rem", letterSpacing: "0.5px" }}>Carpetas de Tareas</p>
-            {
             <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.35rem" }}>
               {[
                 { name: "Principal", path: "/tasks", icon: dashboarImg },
@@ -147,11 +148,9 @@ export function DashboardPage(): JSX.Element {
                   </li>
                 );
               })}
-            </ul>}
+            </ul>
           </div>
         </div>
-
-   
 
         <button onClick={logout} className="cssbuttons-io-button">
           Cerrar Sesión
@@ -169,14 +168,12 @@ export function DashboardPage(): JSX.Element {
 
         {/* Columna Central */}
         <div>
-          {/* Botón de Menú Hamburguesa para abrir la barra lateral */}
-      {/* Botón de Menú Hamburguesa */}
-          <button 
+          <button
             className="mobile-menu-btn"
             style={{ marginBottom: "1rem" }}
             onClick={() => setIsSidebarOpen(true)}
           >
-            ☰ 
+            ☰
           </button>
 
           {/* Cabecera Responsiva */}
@@ -203,7 +200,10 @@ export function DashboardPage(): JSX.Element {
               <p style={{ margin: 0, fontSize: "0.8rem", color: "#bfdbfe" }}>Organizá, priorizá y avanzá en tus proyectos.</p>
             </div>
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => {
+                setTaskToEdit(null);
+                setIsModalOpen(true);
+              }}
               style={{ width: "100%", padding: "0.7rem", backgroundColor: "#fff", color: "#1e3a8a", border: "none", borderRadius: "10px", fontWeight: 700, cursor: "pointer", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.1)" }}
             >
               + Nueva Tarea
@@ -248,88 +248,154 @@ export function DashboardPage(): JSX.Element {
                 </div>
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-  {filteredTasks.map(task => {
-    // Definir estilos dinámicos del botón según la carpeta actual
-    const isCompleted = task.completed || task.folder === "Completadas";
-    const isInProgress = task.folder === "En Proceso";
+                  {filteredTasks.map(task => {
+                    const isCompleted = task.completed || task.folder === "Completadas";
+                    const isInProgress = task.folder === "En Proceso";
 
-    const getCheckboxStyle = () => {
-      if (isCompleted) return { bg: "#10b981", border: "#10b981" };
-      if (isInProgress) return { bg: "#9333ea", border: "#9333ea" };
-      return { bg: "transparent", border: "#2563eb" };
-    };
+                    const getCheckboxStyle = () => {
+                      if (isCompleted) return { bg: "#10b981", border: "#10b981" };
+                      if (isInProgress) return { bg: "#9333ea", border: "#9333ea" };
+                      return { bg: "transparent", border: "#2563eb" };
+                    };
 
-    const currentCheck = getCheckboxStyle();
+                    const currentCheck = getCheckboxStyle();
+                    const effectivePriority = task.priority || (task.folder === "Urgentes" ? "Urgente" : "Media");
 
-    return (
-      <div key={task.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", backgroundColor: "#fff", padding: "1.1rem 1.25rem", borderRadius: "14px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.02)", flexWrap: "wrap", gap: "0.75rem" }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flex: 1, minWidth: "200px" }}>
-          
-          {/* Botón cíclico interactivo */}
-          <button
-            type="button"
-            onClick={() => cycleTaskState(task.id, task.folder || "Pendientes").then(refetch)}
-            title={`Estado: ${task.folder || "Pendientes"}. Haz clic para cambiar.`}
-            style={{
-              width: "24px",
-              height: "24px",
-              borderRadius: "6px",
-              border: `2px solid ${currentCheck.border}`,
-              backgroundColor: currentCheck.bg,
-              cursor: "pointer",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 0,
-              transition: "all 0.2s",
-              flexShrink: 0
-            }}
-          >
-            <svg width="12" height="10" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M1.5 4L4 6.5L8.5 1.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
+                    return (
+                      <div key={task.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", backgroundColor: "#fff", padding: "1.1rem 1.25rem", borderRadius: "14px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.02)", flexWrap: "wrap", gap: "0.75rem" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "1rem", flex: 1, minWidth: "200px" }}>
+                          {/* Botón cíclico interactivo */}
+                          <button
+                            type="button"
+                            onClick={() => cycleTaskState(task.id, task.folder || "Pendientes").then(refetch)}
+                            title={`Estado: ${task.folder || "Pendientes"}. Haz clic para cambiar.`}
+                            style={{
+                              width: "24px",
+                              height: "24px",
+                              borderRadius: "6px",
+                              border: `2px solid ${currentCheck.border}`,
+                              backgroundColor: currentCheck.bg,
+                              cursor: "pointer",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              padding: 0,
+                              transition: "all 0.2s",
+                              flexShrink: 0
+                            }}
+                          >
+                            <svg width="12" height="10" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M1.5 4L4 6.5L8.5 1.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </button>
 
-          <div>
-            <span style={{ textDecoration: "none", color: isCompleted ? "#080808" : "#0f172a", fontWeight: 600, display: "block", fontSize: "0.95rem" }}>
-    {task.title}
-  </span>
-            {task.description && <span style={{ fontSize: "0.8rem", color: "#64748b" }}>{task.description}</span>}
-            <div style={{ display: "flex", gap: "0.75rem", marginTop: "4px", flexWrap: "wrap" }}>
-              {task.dueDate && <span style={{ fontSize: "0.75rem", color: "#2563eb", fontWeight: 500 }}>📅 Vence: {task.dueDate}</span>}
-              <span style={{ fontSize: "0.75rem", color: "#64748b", background: "#f1f5f9", padding: "1px 6px", borderRadius: "4px" }}>📁 {task.folder || "Pendientes"}</span>
-            </div>
-          </div>
-        </div>
+                          <div>
+                            <span style={{ textDecoration: "none", color: isCompleted ? "#080808" : "#0f172a", fontWeight: 600, display: "block", fontSize: "0.95rem" }}>
+                              {task.title}
+                            </span>
+                            {task.description && <span style={{ fontSize: "0.8rem", color: "#64748b" }}>{task.description}</span>}
+                            <div style={{ display: "flex", gap: "0.75rem", marginTop: "4px", flexWrap: "wrap" }}>
+                              {task.dueDate && <span style={{ fontSize: "0.75rem", color: "#2563eb", fontWeight: 500 }}>📅 Vence: {task.dueDate}</span>}
+                              <span style={{ fontSize: "0.75rem", color: "#64748b", background: "#f1f5f9", padding: "1px 6px", borderRadius: "4px" }}>📁 {task.folder || "Pendientes"}</span>
+                            </div>
+                          </div>
+                        </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <span style={{ fontSize: "0.75rem", padding: "0.3rem 0.7rem", borderRadius: "8px", backgroundColor: task.priority === "Urgente" ? "#fee2e2" : "#eff6ff", color: task.priority === "Urgente" ? "#b91c1c" : "#1d4ed8", fontWeight: 600 }}>
-            {task.priority || "Media"}
-          </span>
+                        {/* Contenedor único de acciones */}
+                        <div className="task-card-actions" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                          <select
+                            className="task-priority-select"
+                            value={effectivePriority}
+                            onChange={async (e) => {
+                              const nuevaPrioridad = e.target.value;
+                              await updateTaskPriority(task.id, nuevaPrioridad);
 
-          <button
-            onClick={() => moveToTrash(task.id).then(refetch)}
-            className="bin-button"
-            title="Mover a papelera"
-          >
-            <svg className="bin-top" viewBox="0 0 39 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line y1="5" x2="39" y2="5" stroke="white" strokeWidth="4"></line>
-              <line x1="12" y1="1.5" x2="26.0357" y2="1.5" stroke="white" strokeWidth="3"></line>
-            </svg>
-            <svg className="bin-bottom" viewBox="0 0 33 39" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <mask id={`path-1-${task.id}`} fill="white">
-                <path d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z"></path>
-              </mask>
-              <path d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z" fill="white" mask={`url(#path-1-${task.id})`} />
-              <path d="M12 6L12 29" stroke="white" strokeWidth="4"></path>
-              <path d="M21 6V29" stroke="white" strokeWidth="4"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-    );
-  })}
-</div>
+                              if (nuevaPrioridad === "Urgente") {
+                                await updateTask(task.id, {
+                                  title: task.title,
+                                  description: task.description,
+                                  priority: nuevaPrioridad,
+                                  dueDate: task.dueDate,
+                                  folder: "Urgentes",
+                                });
+                              } else if (task.folder === "Urgentes") {
+                                await updateTask(task.id, {
+                                  title: task.title,
+                                  description: task.description,
+                                  priority: nuevaPrioridad,
+                                  dueDate: task.dueDate,
+                                  folder: task.completed ? "Completadas" : "Pendientes",
+                                });
+                              }
+
+                              refetch();
+                            }}
+                            title="Cambiar prioridad"
+                            style={{
+                              fontSize: "0.75rem",
+                              padding: "0.35rem 0.6rem",
+                              borderRadius: "8px",
+                              backgroundColor:
+                                effectivePriority === "Urgente" ? "#fee2e2" :
+                                  effectivePriority === "Alta" ? "#ffedd5" :
+                                    effectivePriority === "Baja" ? "#f1f5f9" : "#eff6ff",
+                              color:
+                                effectivePriority === "Urgente" ? "#b91c1c" :
+                                  effectivePriority === "Alta" ? "#c2410c" :
+                                    effectivePriority === "Baja" ? "#475569" : "#1d4ed8",
+                              border: `1px solid ${effectivePriority === "Urgente" ? "#fecaca" :
+                                  effectivePriority === "Alta" ? "#fed7aa" :
+                                    effectivePriority === "Baja" ? "#cbd5e1" : "#bfdbfe"
+                                }`,
+                              fontWeight: 600,
+                              cursor: "pointer",
+                              outline: "none"
+                            }}
+                          >
+                            <option value="Baja" style={{ backgroundColor: "#fff", color: "#475569" }}>Baja</option>
+                            <option value="Media" style={{ backgroundColor: "#fff", color: "#1d4ed8" }}>Media</option>
+                            <option value="Alta" style={{ backgroundColor: "#fff", color: "#c2410c" }}>Alta</option>
+                            <option value="Urgente" style={{ backgroundColor: "#fff", color: "#b91c1c" }}>Urgente</option>
+                          </select>
+
+                          {/* Botón de Editar con la imagen boligrafo.png */}
+                          <button
+                            type="button"
+                            className="task-edit-btn"
+                            onClick={() => {
+                              setTaskToEdit(task);
+                              setIsModalOpen(true);
+                            }}
+                            title="Editar tarea"
+                          >
+                            <img src={boligrafoImg} alt="Editar" />
+                          </button>
+
+                          {/* Botón Papelera */}
+                          <button
+                            type="button"
+                            onClick={() => moveToTrash(task.id).then(refetch)}
+                            className="bin-button"
+                            title="Mover a papelera"
+                          >
+                            <svg className="bin-top" viewBox="0 0 39 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <line y1="5" x2="39" y2="5" stroke="white" strokeWidth="4"></line>
+                              <line x1="12" y1="1.5" x2="26.0357" y2="1.5" stroke="white" strokeWidth="3"></line>
+                            </svg>
+                            <svg className="bin-bottom" viewBox="0 0 33 39" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <mask id={`path-1-${task.id}`} fill="white">
+                                <path d="M0 0H33V35C33 37.2091 31.2091 39 29 39H4C1.79086 39 0 37.2091 0 35V0Z"></path>
+                              </mask>
+                              <path d="M0 0H33H0ZM37 35C37 39.4183 33.4183 43 29 43H4C-0.418278 43 -4 39.4183 -4 35H4H29H37ZM4 43C-0.418278 43 -4 39.4183 -4 35V0H4V35V43ZM37 0V35C37 39.4183 33.4183 43 29 43V35V0H37Z" fill="white" mask={`url(#path-1-${task.id})`} />
+                              <path d="M12 6L12 29" stroke="white" strokeWidth="4"></path>
+                              <path d="M21 6V29" stroke="white" strokeWidth="4"></path>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
             </section>
           )}
@@ -386,10 +452,10 @@ export function DashboardPage(): JSX.Element {
                 <span style={{ color: "#10b981" }}>🟢 Completadas</span>
                 <b>{completadasCount}</b>
               </div>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
                 <span style={{ color: "#dc2626" }}>🔥 Urgentes</span>
                 <b>{urgentesCount}</b>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -403,7 +469,7 @@ export function DashboardPage(): JSX.Element {
             </p>
           </div>
 
-       <div style={{ backgroundColor: "#fff", padding: "1.5rem", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.04)" }}>
+          <div style={{ backgroundColor: "#fff", padding: "1.5rem", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.04)" }}>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
               <span style={{ fontSize: "1.2rem" }}>📧</span>
               <h3 style={{ fontSize: "1rem", margin: 0, color: "#0f172a" }}>Resumen por Correo</h3>
@@ -411,10 +477,9 @@ export function DashboardPage(): JSX.Element {
             <p style={{ fontSize: "0.825rem", color: "#64748b", marginBottom: "1.25rem", lineHeight: "1.4" }}>
               Recibe un reporte detallado con el estado de todas tus tareas directamente en tu correo electrónico configurado con AWS SES.
             </p>
-            
-            {/* Contenedor centrado para el botón */}
+
             <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
-              <EmailSummaryButton todos={activeTasks}  />
+              <EmailSummaryButton todos={activeTasks} />
             </div>
           </div>
 
@@ -426,13 +491,19 @@ export function DashboardPage(): JSX.Element {
         <TaskFormModal
           currentFolder={currentFolder === "Todas" ? "Pendientes" : currentFolder}
           userEmail={user?.email || ""}
-          onClose={() => setIsModalOpen(false)}
-          onSubmit={handleCreateNewTask}
+          taskToEdit={taskToEdit}
+          onClose={() => {
+            setIsModalOpen(false);
+            setTaskToEdit(null);
+          }}
+          onSubmit={handleCreateOrUpdateTask}
         />
       )}
-      
+
     </div>
   );
 }
 
 export default DashboardPage;
+
+
