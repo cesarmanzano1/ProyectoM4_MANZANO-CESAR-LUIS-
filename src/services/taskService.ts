@@ -92,6 +92,8 @@ export async function permanentDeleteTask(taskId: string) {
 export async function updateTask(taskId: string, input: {
   title: string;
   description?: string;
+  createdBy?: string;
+  assignedTo?: string;
   priority?: string;
   dueDate?: string;
   folder: string;
@@ -100,6 +102,8 @@ export async function updateTask(taskId: string, input: {
   await updateDoc(taskRef, {
     title: input.title,
     description: input.description || "",
+    createdBy: input.createdBy || "",
+    assignedTo: input.assignedTo || "",
     priority: input.priority || "Media",
     dueDate: input.dueDate || "",
     folder: input.folder,
@@ -128,8 +132,28 @@ export async function cycleTaskState(taskId: string, currentFolder: string) {
     folder: nextFolder,
     completed: isCompleted
   });
-}
-export async function updateTaskPriority(taskId: string, newPriority: string) {
+};
+// export async function updateTaskPriority(taskId: string, newPriority: string) {
+//   const taskRef = doc(db, "tasks", taskId);
+//   await updateDoc(taskRef, { priority: newPriority });
+// }
+export async function updateTaskPriorityAndFolder(
+  taskId: string,
+  newPriority: string,
+  currentFolder?: string,
+  isCompleted?: boolean
+) {
   const taskRef = doc(db, "tasks", taskId);
-  await updateDoc(taskRef, { priority: newPriority });
+  let nextFolder = currentFolder || "Pendientes";
+
+  if (newPriority === "Urgente") {
+    nextFolder = "Urgentes";
+  } else if (currentFolder === "Urgentes") {
+    nextFolder = isCompleted ? "Completadas" : "Pendientes";
+  }
+
+  await updateDoc(taskRef, {
+    priority: newPriority,
+    folder: nextFolder,
+  });
 }

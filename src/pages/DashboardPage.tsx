@@ -6,11 +6,12 @@ import { useTasks } from "../hooks/useTasks";
 import {
   addTask,
   updateTask,
-  updateTaskPriority,
+  updateTaskPriorityAndFolder,
   moveToTrash,
   restoreTask,
   permanentDeleteTask,
   cycleTaskState,
+  type Task,
 } from "../services/taskService";
 import { EmailSummaryButton } from "../components/EmailSummaryButton";
 import { TaskFormModal } from "../components/TaskFormModal";
@@ -66,7 +67,24 @@ export function DashboardPage(): JSX.Element {
     setTaskToEdit(null);
     refetch();
   };
-
+  const handlePriorityChange = async (task: Task, nuevaPrioridad: string) => {
+    try {
+      await updateTaskPriorityAndFolder(task.id, nuevaPrioridad, task.folder, task.completed);
+      await refetch();
+    } catch (err) {
+      console.error("Error al actualizar prioridad en Firestore:", err);
+      alert("No se pudo guardar el cambio de prioridad en Firestore. Revisá la consola.");
+    }
+  };
+  const handleCycleState = async (task: Task) => {
+    try {
+      await cycleTaskState(task.id, task.folder || "Pendientes");
+      await refetch();
+    } catch (err) {
+      console.error("Error al cambiar estado en Firestore:", err);
+      alert("No se pudo cambiar el estado en Firestore. Revisá la consola.");
+    }
+  };
   const folderFilteredTasks = currentFolder === "Todas"
     ? activeTasks
     : activeTasks.filter(t => (t.folder || "Pendientes").toLowerCase() === currentFolder.toLowerCase());
@@ -282,7 +300,14 @@ export function DashboardPage(): JSX.Element {
                           <button
                             type="button"
                             className="task-status-checkbox"
-                            onClick={() => cycleTaskState(task.id, task.folder || "Pendientes").then(refetch)}
+                            onClick={async () => {
+                              try {
+                                await cycleTaskState(task.id, task.folder || "Pendientes");
+                                await refetch();
+                              } catch (err) {
+                                console.error("Error al cambiar estado:", err);
+                              }
+                            }}
                             title={`Estado: ${task.folder || "Pendientes"}. Haz clic para cambiar.`}
                             style={{
                               width: "20px",
@@ -326,27 +351,17 @@ export function DashboardPage(): JSX.Element {
                             value={effectivePriority}
                             onChange={async (e) => {
                               const nuevaPrioridad = e.target.value;
-                              await updateTaskPriority(task.id, nuevaPrioridad);
-
-                              if (nuevaPrioridad === "Urgente") {
-                                await updateTask(task.id, {
-                                  title: task.title,
-                                  description: task.description,
-                                  priority: nuevaPrioridad,
-                                  dueDate: task.dueDate,
-                                  folder: "Urgentes",
-                                });
-                              } else if (task.folder === "Urgentes") {
-                                await updateTask(task.id, {
-                                  title: task.title,
-                                  description: task.description,
-                                  priority: nuevaPrioridad,
-                                  dueDate: task.dueDate,
-                                  folder: task.completed ? "Completadas" : "Pendientes",
-                                });
+                              try {
+                                await updateTaskPriorityAndFolder(
+                                  task.id,
+                                  nuevaPrioridad,
+                                  task.folder,
+                                  task.completed
+                                );
+                                await refetch();
+                              } catch (err) {
+                                console.error("Error al actualizar prioridad en Firestore:", err);
                               }
-
-                              refetch();
                             }}
                             title="Cambiar prioridad"
                             style={{

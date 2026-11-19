@@ -564,7 +564,155 @@ body {
     z-index: 1150;
   }
 }
+/* ==========================================================================
+   8. CALENDARIO RESPONSIVO
+   ========================================================================== */
+.calendar-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem;
+  color: #0f172a;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
 
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.calendar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  margin: 0;
+  color: #0f172a;
+}
+
+.calendar-nav-group {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.calendar-nav-btn {
+  padding: 0.4rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background-color: #f8fafc;
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.calendar-today-btn {
+  padding: 0.4rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #bfdbfe;
+  background-color: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+  font-size: 0.82rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.calendar-weekday {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  padding: 0.35rem 0;
+}
+
+.calendar-cell {
+  min-height: 86px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.45rem;
+  font-size: 0.8rem;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.calendar-cell--empty {
+  border-style: dashed;
+  opacity: 0.5;
+}
+
+.calendar-cell--today {
+  background-color: #eff6ff;
+  border: 1.5px solid #2563eb;
+}
+
+.calendar-cell-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2px;
+  margin-bottom: 0.3rem;
+}
+
+.calendar-day-num {
+  font-weight: 700;
+  color: #334155;
+  font-size: 0.82rem;
+}
+
+.calendar-day-num--today {
+  color: #1d4ed8;
+}
+
+.calendar-today-badge {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #2563eb;
+  background-color: #dbeafe;
+  padding: 1px 4px;
+  border-radius: 999px;
+}
+
+.calendar-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.calendar-task-pill {
+  color: #ffffff;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: 0.68rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.calendar-task-pill--pending {
+  background-color: #2563eb;
+}
+
+.calendar-task-pill--done {
+  background-color: #10b981;
+}
 /* Celulares grandes y medianos (<= 768px) */
 @media (max-width: 768px) {
   .auth-left-panel {
@@ -683,7 +831,7 @@ body {
     width: 13px;
   }
 
- .task-status-checkbox,
+  .task-status-checkbox,
   button.task-status-checkbox {
     width: 22px !important;
     height: 22px !important;
@@ -693,6 +841,64 @@ body {
     padding: 0 !important;
     transition: background-color 0.2s, border-color 0.2s !important;
   }
+
+  div[style*="gridTemplateColumns: 1fr 1fr"],
+  div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+  }
+  .calendar-card {
+    padding: 0.75rem !important;
+    border-radius: 12px !important;
+  }
+
+  .calendar-title {
+    font-size: 1rem !important;
+  }
+
+  .calendar-nav-group {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0.3rem !important;
+  }
+
+  .calendar-nav-btn,
+  .calendar-today-btn {
+    flex: 1 1 0 !important;
+    width: auto !important;
+    padding: 0.4rem 0.35rem !important;
+    font-size: 0.75rem !important;
+    text-align: center;
+  }
+
+  .calendar-grid {
+    gap: 0.2rem !important;
+  }
+
+  .calendar-weekday {
+    font-size: 0.65rem !important;
+    padding: 0.2rem 0 !important;
+  }
+
+  .calendar-cell {
+    min-height: 54px !important;
+    padding: 0.22rem !important;
+    border-radius: 6px !important;
+  }
+
+  .calendar-day-num {
+    font-size: 0.72rem !important;
+  }
+
+  .calendar-today-badge {
+    display: none;
+  }
+
+  .calendar-task-pill {
+    font-size: 0.58rem !important;
+    padding: 1px 3px !important;
+    border-radius: 4px !important;
+  }
+
 }
 
 @media (max-width: 768px) {

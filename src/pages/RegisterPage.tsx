@@ -210,6 +210,7 @@ return (
               <input
                 name="email"
                 type="text"
+                autoComplete="off"
                 placeholder="nombre@correo.com"
                 value={formData.email}
                 onChange={handleChange}
@@ -230,6 +231,7 @@ return (
                 <input
                   name="password"
                   type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
                   placeholder="Mínimo 8 caracteres"
                   value={formData.password}
                   onChange={handleChange}
