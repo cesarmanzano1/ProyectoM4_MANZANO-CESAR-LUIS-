@@ -11,7 +11,6 @@ import {
   restoreTask,
   permanentDeleteTask,
   cycleTaskState,
-  type Task,
 } from "../services/taskService";
 import { EmailSummaryButton } from "../components/EmailSummaryButton";
 import { TaskFormModal } from "../components/TaskFormModal";
@@ -67,24 +66,24 @@ export function DashboardPage(): JSX.Element {
     setTaskToEdit(null);
     refetch();
   };
-  const handlePriorityChange = async (task: Task, nuevaPrioridad: string) => {
-    try {
-      await updateTaskPriorityAndFolder(task.id, nuevaPrioridad, task.folder, task.completed);
-      await refetch();
-    } catch (err) {
-      console.error("Error al actualizar prioridad en Firestore:", err);
-      alert("No se pudo guardar el cambio de prioridad en Firestore. Revisá la consola.");
-    }
-  };
-  const handleCycleState = async (task: Task) => {
-    try {
-      await cycleTaskState(task.id, task.folder || "Pendientes");
-      await refetch();
-    } catch (err) {
-      console.error("Error al cambiar estado en Firestore:", err);
-      alert("No se pudo cambiar el estado en Firestore. Revisá la consola.");
-    }
-  };
+  // const handlePriorityChange = async (task: Task, nuevaPrioridad: string) => {
+  //   try {
+  //     await updateTaskPriorityAndFolder(task.id, nuevaPrioridad, task.folder, task.completed);
+  //     await refetch();
+  //   } catch (err) {
+  //     console.error("Error al actualizar prioridad en Firestore:", err);
+  //     alert("No se pudo guardar el cambio de prioridad en Firestore. Revisá la consola.");
+  //   }
+  // };
+  // const handleCycleState = async (task: Task) => {
+  //   try {
+  //     await cycleTaskState(task.id, task.folder || "Pendientes");
+  //     await refetch();
+  //   } catch (err) {
+  //     console.error("Error al cambiar estado en Firestore:", err);
+  //     alert("No se pudo cambiar el estado en Firestore. Revisá la consola.");
+  //   }
+  // };
   const folderFilteredTasks = currentFolder === "Todas"
     ? activeTasks
     : activeTasks.filter(t => (t.folder || "Pendientes").toLowerCase() === currentFolder.toLowerCase());
