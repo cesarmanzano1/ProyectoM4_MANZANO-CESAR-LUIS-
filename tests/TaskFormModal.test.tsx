@@ -1,4 +1,3 @@
-// tests/RegisterPage.test.tsx
 // tests/TaskFormModal.test.tsx
 /**
  * @vitest-environment jsdom

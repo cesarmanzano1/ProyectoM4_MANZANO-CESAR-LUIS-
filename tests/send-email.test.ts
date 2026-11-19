@@ -1,5 +1,4 @@
 // tests/send-email.test.ts
-// tests/send-email.test.ts
 import type { VercelRequest, VercelResponse } from '@vercel/node'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
