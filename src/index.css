@@ -5,7 +5,8 @@
    ================================================================---------- */
 body {
   margin: 0;
-  background-color: #0f172a; /* Fondo oscuro moderno (Slate 900) */
+  background-color: #0f172a;
+  /* Fondo oscuro moderno (Slate 900) */
   color: #f8fafc;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
@@ -17,13 +18,15 @@ body {
   align-items: flex-start;
   padding: 3rem 1rem;
 }
+
 /* ==========================================================================
    2. COMPONENTES Y TARJETAS GENERALES
    ================================================================---------- */
 .tasks-container {
   width: 100%;
   max-width: 550px;
-  background: #1e293b; /* Slate 800 */
+  background: #1e293b;
+  /* Slate 800 */
   border-radius: 16px;
   padding: 2rem;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
@@ -139,20 +142,25 @@ body {
   transition-duration: 0.3s;
   flex-shrink: 0;
 }
+
 .bin-bottom {
   width: 13px;
 }
+
 .bin-top {
   width: 15px;
   transform-origin: right;
   transition-duration: 0.3s;
 }
+
 .bin-button:hover .bin-top {
   transform: rotate(45deg);
 }
+
 .bin-button:hover {
   background-color: rgb(255, 0, 0);
 }
+
 .bin-button:active {
   transform: scale(0.9);
 }
@@ -179,27 +187,33 @@ body {
   transition: background-color 0.2s;
   font-weight: 600;
 }
+
 .buttonDownload:hover {
   background-color: #45a21a;
   color: white;
 }
+
 .buttonDownload:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
-.buttonDownload:before, .buttonDownload:after {
+
+.buttonDownload:before,
+.buttonDownload:after {
   content: ' ';
   display: block;
   position: absolute;
   left: 15px;
   top: 52%;
 }
+
 .buttonDownload:before {
   width: 10px;
   height: 2px;
   border-style: solid;
   border-width: 0 2px 2px;
 }
+
 .buttonDownload:after {
   width: 0;
   height: 0;
@@ -212,18 +226,35 @@ body {
   animation: downloadArrow 1s linear infinite;
   animation-play-state: paused;
 }
+
 .buttonDownload:hover:before {
   border-color: #cdefbd;
 }
+
 .buttonDownload:hover:after {
   border-top-color: #cdefbd;
   animation-play-state: running;
 }
+
 @keyframes downloadArrow {
-  0% { margin-top: -7px; opacity: 1; }
-  0.001% { margin-top: -15px; opacity: 0.4; }
-  50% { opacity: 1; }
-  100% { margin-top: 0; opacity: 0.4; }
+  0% {
+    margin-top: -7px;
+    opacity: 1;
+  }
+
+  0.001% {
+    margin-top: -15px;
+    opacity: 0.4;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    margin-top: 0;
+    opacity: 0.4;
+  }
 }
 
 /* Botón animado de Cerrar Sesión */
@@ -251,6 +282,7 @@ body {
   width: 100%;
   justify-content: center;
 }
+
 .cssbuttons-io-button .icon {
   background: white;
   margin-left: 1em;
@@ -265,17 +297,21 @@ body {
   transition: all 0.6s cubic-bezier(0.23, 1, 0.320, 1);
   transform: rotate(180deg);
 }
+
 .cssbuttons-io-button:hover .icon {
   width: calc(100% - 0.6em);
 }
+
 .cssbuttons-io-button .icon svg {
   width: 1.1em;
   transition: transform 0.3s;
   color: #B721FF;
 }
+
 .cssbuttons-io-button:hover .icon svg {
   transform: translateX(0.1em);
 }
+
 .cssbuttons-io-button:active .icon {
   transform: scale(0.9);
 }
@@ -303,6 +339,7 @@ body {
   border-radius: 10px;
   transition: border-color 0.2s;
 }
+
 .task-card:hover {
   border-color: #64748b;
 }
@@ -320,10 +357,12 @@ body {
   padding: 0;
   transition: all 0.2s;
 }
+
 .task-check--completed {
   background: #10b981;
   border-color: #10b981;
 }
+
 .task-check-icon {
   color: #ffffff;
 }
@@ -335,6 +374,7 @@ body {
   color: #f8fafc;
   word-break: break-word;
 }
+
 .task-title--completed {
   text-decoration: line-through;
   color: #64748b;
@@ -348,6 +388,7 @@ body {
   opacity: 0.7;
   transition: opacity 0.2s;
 }
+
 .task-delete:hover {
   opacity: 1;
 }
@@ -363,16 +404,19 @@ body {
   padding: 2.5rem 1rem;
   color: #94a3b8;
 }
+
 .empty-state-icon {
   font-size: 2.5rem;
   display: block;
   margin-bottom: 0.5rem;
 }
+
 .empty-state-title {
   font-weight: 600;
   color: #e2e8f0;
   margin: 0 0 0.25rem 0;
 }
+
 .empty-state-text {
   font-size: 0.875rem;
   margin: 0;
@@ -399,7 +443,7 @@ body {
   flex-direction: column;
   justify-content: space-between;
   color: #fff;
-  box-shadow: 4px 0 15px rgba(0,0,0,0.05);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
   flex-shrink: 0;
   box-sizing: border-box;
 }
@@ -427,7 +471,7 @@ body {
   cursor: pointer;
   font-weight: 600;
   font-size: 0.95rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar-overlay {
@@ -461,6 +505,7 @@ body {
   height: 18px;
   object-fit: contain;
 }
+
 /* ==========================================================================
    6. CLASES AUXILIARES Y DE INTERACCIÓN
    ================================================================---------- */
@@ -537,7 +582,7 @@ body {
     padding: 1rem !important;
   }
 
-  div[style*="maxWidth: 420px"], 
+  div[style*="maxWidth: 420px"],
   div[style*="maxWidth: 440px"] {
     max-width: 100% !important;
     padding: 1rem !important;
@@ -603,10 +648,11 @@ body {
     border-radius: 8px !important;
   }
 
-  div[style*="display: flex"][style*="gap"] > button {
+  div[style*="display: flex"][style*="gap"]>button {
     flex: 1 !important;
     width: 50% !important;
   }
+
   .task-card-actions {
     width: 100%;
     justify-content: space-between;
@@ -621,23 +667,36 @@ body {
     padding: 0.35rem 0.5rem !important;
   }
 
-  .task-card-actions > button.task-edit-btn,
-  .task-card-actions > button.bin-button {
+  .task-card-actions>button.task-edit-btn,
+  .task-card-actions>button.bin-button {
     flex: 0 0 auto !important;
     width: 34px !important;
     height: 34px !important;
     padding: 0 !important;
   }
 
-  .task-card-actions > button.bin-button .bin-bottom {
+  .task-card-actions>button.bin-button .bin-bottom {
     width: 11px;
   }
 
-  .task-card-actions > button.bin-button .bin-top {
+  .task-card-actions>button.bin-button .bin-top {
     width: 13px;
   }
+
+ .task-status-checkbox,
+  button.task-status-checkbox {
+    width: 22px !important;
+    height: 22px !important;
+    min-width: 22px !important;
+    max-width: 22px !important;
+    flex: 0 0 22px !important;
+    padding: 0 !important;
+    transition: background-color 0.2s, border-color 0.2s !important;
+  }
 }
+
 @media (max-width: 768px) {
+
   /* Contenedor del buscador y título de tareas */
   section div[style*="justify-content: space-between"] {
     flex-direction: column !important;

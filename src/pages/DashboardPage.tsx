@@ -262,29 +262,47 @@ export function DashboardPage(): JSX.Element {
                     const effectivePriority = task.priority || (task.folder === "Urgentes" ? "Urgente" : "Media");
 
                     return (
-                      <div key={task.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", backgroundColor: "#fff", padding: "1.1rem 1.25rem", borderRadius: "14px", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.02)", flexWrap: "wrap", gap: "0.75rem" }}>
+                      <div
+                        key={task.id}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                          backgroundColor: "#fff",
+                          padding: "1.1rem 1.25rem",
+                          borderRadius: "14px",
+                          border: "1px solid #e2e8f0",
+                          boxShadow: "0 4px 6px -1px rgba(0,0,0,0.02)",
+                          flexWrap: "wrap",
+                          gap: "0.75rem",
+                        }}
+                      >
                         <div style={{ display: "flex", alignItems: "center", gap: "1rem", flex: 1, minWidth: "200px" }}>
                           {/* Botón cíclico interactivo */}
                           <button
                             type="button"
+                            className="task-status-checkbox"
                             onClick={() => cycleTaskState(task.id, task.folder || "Pendientes").then(refetch)}
                             title={`Estado: ${task.folder || "Pendientes"}. Haz clic para cambiar.`}
                             style={{
-                              width: "24px",
-                              height: "24px",
+                              width: "20px",
+                              height: "20px",
+                              minWidth: "20px",
+                              maxWidth: "20px",
+                              flex: "0 0 20px",
                               borderRadius: "6px",
                               border: `2px solid ${currentCheck.border}`,
                               backgroundColor: currentCheck.bg,
                               cursor: "pointer",
-                              display: "flex",
+                              display: "inline-flex",
                               alignItems: "center",
                               justifyContent: "center",
                               padding: 0,
-                              transition: "all 0.2s",
-                              flexShrink: 0
+                              transition: "background-color 0.2s, border-color 0.2s",
+                              flexShrink: 0,
                             }}
                           >
-                            <svg width="12" height="10" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg width="11" height="9" viewBox="0 0 10 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                               <path d="M1.5 4L4 6.5L8.5 1.5" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           </button>
@@ -344,8 +362,8 @@ export function DashboardPage(): JSX.Element {
                                   effectivePriority === "Alta" ? "#c2410c" :
                                     effectivePriority === "Baja" ? "#475569" : "#1d4ed8",
                               border: `1px solid ${effectivePriority === "Urgente" ? "#fecaca" :
-                                  effectivePriority === "Alta" ? "#fed7aa" :
-                                    effectivePriority === "Baja" ? "#cbd5e1" : "#bfdbfe"
+                                effectivePriority === "Alta" ? "#fed7aa" :
+                                  effectivePriority === "Baja" ? "#cbd5e1" : "#bfdbfe"
                                 }`,
                               fontWeight: 600,
                               cursor: "pointer",
